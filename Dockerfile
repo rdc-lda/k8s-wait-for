@@ -1,20 +1,21 @@
-FROM alpine:3.7
+FROM --platform=$TARGETPLATFORM alpine:3.7
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
 
-MAINTAINER Michal Orzechowski <orzechowski.michal@gmail.com>
-
+MAINTAINER Robin Huiser <robin@rdc.pt>
 ARG VCS_REF
 ARG BUILD_DATE
 
 # Metadata
 LABEL org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url="https://github.com/groundnuty/k8s-wait-for" \
+      org.label-schema.vcs-url="https://github.com/rdclda/k8s-wait-for" \
       org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.docker.dockerfile="/Dockerfile"
 
-ENV KUBE_LATEST_VERSION="v1.18.1"
+ENV KUBE_LATEST_VERSION="v1.19.3"
 
 RUN apk add --update ca-certificates curl jq \
- && curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_LATEST_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl \
+ && curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_LATEST_VERSION}/bin/${TARGETPLATFORM}/kubectl -o /usr/local/bin/kubectl \
  && chmod +x /usr/local/bin/kubectl \
  && rm /var/cache/apk/*
 

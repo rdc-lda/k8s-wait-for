@@ -1,5 +1,5 @@
 TAG = $(shell git describe --tags --always)
-PREFIX = $(shell git config --get remote.origin.url | tr ':.' '/'  | rev | cut -d '/' -f 3 | rev)
+PREFIX = rdclda
 REPO_NAME = $(shell git config --get remote.origin.url | tr ':.' '/'  | rev | cut -d '/' -f 2 | rev)
 
 all: push
@@ -8,6 +8,7 @@ container: image
 
 image:
 	docker build -t $(PREFIX)/$(REPO_NAME):latest . # Build new image and automatically tag it as latest
+	docker build --platform arm64 -t $(PREFIX)/$(REPO_NAME):latest . # Build new image and automatically tag it as latest	
 	docker tag $(PREFIX)/$(REPO_NAME) $(PREFIX)/$(REPO_NAME):$(TAG)  # Add the version tag to the latest image
 
 push: image
